@@ -1,0 +1,57 @@
+OpenEmbedded/Yocto Project layer for CFEngine support
+=====================================================
+
+This layer provides support for CFEngine[1] for use with OpenEmbedded and/or 
+Yocto Project build systems.
+
+This layer depends on:
+
+git://git.yoctoproject.org/poky/
+
+and was tested with Fido.
+
+[1] http://cfengine.com/
+
+Contributing
+------------
+
+Send in your pull requests through github.
+
+Usage instructions:
+------------------
+
+1) make sure that you have pam support included
+
+DISTRO_FEATURES_append = " pam"
+
+2) add cfengine to your image e.g.:
+
+vim conf/local.conf
+
+IMAGE_INSTALL_append = " cfengine"
+
+bitbake core-image-sato-sdk
+
+"Smoke" testing on target:
+--------------------------
+
+1) initial tests
+
+cf-promises --show-vars
+cf-promises --show-classes
+
+2) more tests
+
+create a file called print.cf with this content:
+
+-->
+
+  bundle agent main
+  {
+  reports:
+   "Hello world from cfengine running on a --> $(sys.os) <-- OS and --> $(sys.arch) <-- ARCH"; 
+  }
+
+<--
+
+cf-agent print.cf
